@@ -1,5 +1,7 @@
 # HealthNet
 
+###
+
 ### Installation:  
 * This web app will work on any type of machine (Windows, macOS, Linux) so long as you already have the software stack detailed by our instructor (Python 3.4.3, SQLite 3.8.3.1, Django 1.9.1).
 * __Steps to run:__
@@ -8,10 +10,10 @@
 	3. Shift-right click in the folder
 	4. Click __"Open command window here"__
   5. In the command window type __"python manage.py runserver"__
-	6. Press enter
-	7. Open a web browser of your choice
-	8. Navigate to “http://127.0.0.1:8000/HealthNet”
-	9. Enjoy!
+  6. Press enter
+  7. Open a web browser of your choice
+  8. Navigate to “http://127.0.0.1:8000/HealthNet”
+  9. Enjoy!
 
 ### Known Bugs and Disclaimers:
 * This is a work in progress. There are bugs (Nobody is perfect!)
