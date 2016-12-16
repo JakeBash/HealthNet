@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+
+{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'HAccelerator/mainPages.css' %}" />
+<link rel='shortcut icon' href={% static 'HAccelerator/images/favicon.ico' %} type='images/favicon' />
+
+<head>
+	<title>HealthNet | User Information</title>
+
+    <script>
+    function conExport()
+    {
+        if (confirm("WARNING: The HealthNet Development Team (Team Suites) cannot be held responsible if your exported " +
+                        "information falls into the wrong hands. Are you sure you want to continue?"))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    </script>
+</head>
+
+<ul class="nav">
+	<li class="nav_container"><a class="nav_items" href="{% url 'HealthNet:home' %}">Home</a></li>
+	<li class="nav_container"><a class="nav_item_active" href="{% url 'HealthNet:information' %}">User Information</a></li>
+	<li class="nav_container"><a class="nav_items" href="{% url 'HealthNet:appointments' %}">Manage Appointments</a></li>
+    <li class="nav_container"><a class="nav_items" href="{% url 'HealthNet:prescriptions' %}">Prescriptions</a></li>
+	<li class="nav_container"><a class="nav_items" href="{% url 'HealthNet:calendar' %}">Calendar</a></li>
+	<li class="nav_container"><a class="nav_items" href="{% url 'HealthNet:messages' %}">Messages</a></li>
+	<li style="float:right" class="nav_container"><a class="nav_items" href="{% url 'HealthNet:logOut' %}">Log Out</a></li>
+</ul>
+
+<body>
+    <div id="container">
+        <div id="tablecontainer">
+            {% if type == "Patient" %}
+                <h2>Profile Information</h2>
+                <table>
+                    <tr>
+                        <th>Name</th>
+                        <th>Address</th>
+                        <th>Phone Number</th>
+                        <th>Email</th>
+                        <th>Insurance Provider</th>
+                        <th>Insurance ID</th>
+                    </tr>
+                    <tr>
+                        <td>{{ patient.lastName }}, {{ patient.firstName }}</td>
+                        <td>{{ patient.address }}</td>
+                        <td>{{ patient.number }}</td>
+                        <td>{{ patient.email }}</td>
+                        <td>{{ patient.provider }}</td>
+                        <td>{{ patient.insuranceid }}</td>
+                    </tr>
+                </table>
+
+                <h2>Emergency Contact</h2>
+                <table>
+                    <tr>
+                        <th>Name</th>
+                        <th>Address</th>
+                        <th>Phone Number</th>
+                    </tr>
+                    <tr>
+                        <td>{{ patient.contact.lastName }}, {{ patient.contact.firstName }}</td>
+                        <td>{{ patient.contact.address }}</td>
+                        <td>{{ patient.contact.number }}</td>
+                    </tr>
+                </table>
+
+                <br>
+
+                <form action="{% url 'HealthNet:updatePro' %}">
+                    <input type="submit" value="Update Profile Information" />
+                </form>
+
+                <br>
+                <br>
+
+                <h2>Medical Information</h2>
+                <table>
+                    <tr>
+                        <th>Height</th>
+                        <th>Weight</th>
+                        <th>Allergies</th>
+                        <th>Gender</th>
+                    </tr>
+                    <tr>
+                        <td>{{ patient.height }}</td>
+                        <td>{{ patient.weight }} lbs</td>
+                        <td>{{ patient.allergies }}</td>
+                        <td>{{ patient.gender }}</td>
+                    </tr>
+                </table>
+
+                <br>
+                <br>
+
+                <h2>Test Results</h2>\
+                {% if tests %}
+                    <table>
+                        <tr>
+                            <th>Test Name</th>
+                            <th>Release Status</th>
+                        </tr>
+                        {% for t in tests %}
+                            <tr>
+                                {% if t.released == True %}
+                                    <td><a class="alink" href="{% url 'HealthNet:testDetails' t.id %}">{{ t.name }}</a></td>
+                                {% else %}
+                                    <td>{{ t.name }}</td>
+                                {% endif %}
+                                {% if t.released == True %}
+                                    <td>Test is Released</td>
+                                {% else %}
+                                    <td>Not yet Released</td>
+                                {% endif %}
+                                </tr>
+                        {% endfor %}
+                    </table>
+                {% else %}
+                    <p>There are no tests to view</p>
+                {% endif %}
+
+                <br>
+
+				<form action="{% url 'HealthNet:export' %}" onsubmit="return conExport();">
+                    <input class="button" type="submit" value="Export Tests and Profile Information" />
+                </form>
+			{% endif %}
+			
+			{% if type != "Patient" %}
+                <h2><span style="text-decoration: underline;">{{ employee.firstName }} {{ employee.lastName }}</span>, these are the patients at <span style="text-decoration: underline;">{{ employee.workplace.name }}</span></h2>
+                {% if patw %}
+                    <table>
+                        <tr>
+                            <th>Patient Name</th>
+                            <th>Height</th>
+                            <th>Weight</th>
+                            <th>Allergies</th>
+                            <th>Gender</th>
+                            {% if type == "Doctor" %}
+                                <th></th>
+                                <th></th>
+                            {% endif %}
+                        </tr>
+                            {% for patient in patients %}
+                                {% if patient.hospital == employee.workplace %}
+                                    <tr>
+                                        <td><a class="alink" href="{% url 'HealthNet:updateMed' patient.id %}">{{ patient.lastName }}, {{ patient.firstName }}</a></td>
+                                        <td>{{ patient.height }}</td>
+                                        <td>{{ patient.weight }} lbs</td>
+                                        <td>{{ patient.allergies }}</td>
+                                        <td>{{ patient.gender }}</td>
+                                        {% if type == "Doctor" %}
+                                            <td><form action="{% url 'HealthNet:tests' patient.id %}"><input type="submit" value="Test Results" /></form></td>
+                                            <td><form action="{% url 'HealthNet:discharge' patient.id %}"><input type="submit" value="Discharge" /></form></td>
+                                        {% endif %}
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                    </table>
+                {% else %}
+                    <p>There are no patients at your hospital</p>
+                {% endif %}
+
+                <br>
+                <br>
+
+                <h2>Non Admitted Patients</h2>
+                <table>
+                    <tr>
+                        <th>Patient Name</th>
+                        <th>Current Hospital</th>
+                        <th></th>
+                    </tr>
+                    {% for patient in patients %}
+                        {% if patient.hospital.address != employee.workplace.address %}
+                            <tr>
+                                {% if type == "Doctor" %}
+                                    <td><a class="alink" href="{% url 'HealthNet:updateMed' patient.id %}">{{ patient.lastName }}, {{ patient.firstName }}</a></td>
+                                {% else %}
+                                    <td>{{ patient.lastName }}, {{ patient.firstName }}</td>
+                                {% endif %}
+
+                                {%if patient.hospital == None %}
+                                    <td>{{ patient.hospital.name }}</td>
+                                    <td><form action="{% url 'HealthNet:admission' patient.id employee.workplace.id%}"><input type="submit" value="Admit" /></form></td>
+                                {% else %}
+                                    {% if type == "Nurse" %}
+                                        <td>{{ patient.hospital.name }}</td>
+                                    {% endif %}
+                                    {% if type == "Doctor" %}
+                                        <td>{{ patient.hospital.name }}</td>
+                                        <td><form action="{% url 'HealthNet:transfer' patient.id employee.workplace.id%}"><input type="submit" value="Transfer" /></form></td>
+                                    {% endif %}
+                                {% endif %}
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </table>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

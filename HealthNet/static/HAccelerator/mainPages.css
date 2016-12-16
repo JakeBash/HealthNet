@@ -1,0 +1,174 @@
+#container {
+	margin: auto;
+	width: 100%;
+}
+
+#tablecontainer {
+	margin: auto;
+	width: 80%;
+}
+
+#homecontainer {
+	margin: auto;
+	width: 20%;
+	padding: 300px;
+	font-family: Helvetica, Arial, sans-serif;
+	font-weight: bold;
+}
+
+input[type=button] {
+	padding: 10px;
+    background:#0D6BB4;
+	border: 20px;
+    cursor:pointer;
+    border-radius: 0px;
+	color: white;
+	font-weight: bold;
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 17px;
+	transition: .3s;
+	width: 100%;
+}
+
+input[type=button]:hover {
+	background: #0E4F82;
+}
+
+input[type=submit] {
+	padding: 10px;
+    background:#0D6BB4;
+	border: 20px;
+    cursor:pointer;
+    border-radius: 0px;
+	color: white;
+	font-weight: bold;
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 17px;
+	transition: .3s;
+	width: 100%;
+}
+
+input[type=submit]:hover {
+	background: #0E4F82;
+}
+
+#alert {
+    padding: 10px;
+    background-color: #f44336;
+    color: white;
+    margin-bottom: 15px;
+	width:95%;
+	text-align: center;
+	font-family: Helvetica, Arial, sans-serif;
+}
+
+.nav {
+	list-style-type: none;
+    margin: 0;
+    padding: 0;
+	overflow: hidden;
+	position: fixed;
+	top: 0;
+	width: 100%;
+	background-color: #333;
+	font-family: Helvetica, Arial, sans-serif;
+}
+
+.nav_container {
+	float: left;
+}
+
+.nav_items {
+	display: block;
+	color: white;
+	text-align: center;
+	padding: 14px 16px;
+	text-decoration: none;
+	transition: 0.3s;
+}
+
+.nav_items:hover {
+	background-color: #111;
+}
+
+.nav_item_active {
+	display: block;
+	color: white;
+	text-align: center;
+	padding: 14px 16px;
+	text-decoration: none;
+	background-color: #0D6BB4;
+}
+
+table {
+	color: #333;
+	font-family: Helvetica, Arial, sans-serif;
+	width: 100%;
+	border-collapse: collapse;
+	border-spacing: 0px;
+}
+
+td, th {
+	border: 1px solid transparent;
+	height: 30px;
+	transition: all 0.3s;
+}
+
+th {
+	background: #DFDFDF;
+	font-weight: bold;
+}
+
+td {
+	background: #FFFFFF;
+	text-align: center;
+}
+
+tr td:hover {
+	background: #666;
+	color: #FFF;
+}
+
+body {
+	padding-top: 70px;
+}
+
+h1 {
+	text-align: center;
+	font-family: Helvetica, Arial, sans-serif;
+}
+h2 {
+	text-align: center;
+	font-family: Helvetica, Arial, sans-serif;
+}
+
+h3 {
+	text-align: center;
+	font-family: Helvetica, Arial, sans-serif;
+}
+
+h4 {
+	text-align: center;
+	font-family: Helvetica, Arial, sans-serif;
+}
+
+h5 {
+	text-align: center;
+	font-family: Helvetica, Arial, sans-serif;
+}
+p {
+	text-align: center;
+	font-family: Helvetica, Arial, sans-serif;
+}
+
+.alink:link {
+	color: #0D6BB4;
+}
+
+.alink:visited {
+	color: #0D6BB4;
+}
+
+.alink:hover {
+	color: #0E4F82;
+}

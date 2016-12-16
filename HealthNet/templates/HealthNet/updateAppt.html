@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+
+{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'HAccelerator/formPages.css' %}" />
+<link rel='shortcut icon' href={% static 'HAccelerator/images/favicon.ico' %} type='images/favicon' />
+
+<head>
+	<title>HealthNet | Update Appointment</title>
+	<script type="text/javascript">
+		function checkform()
+		{
+            if(!validateNumbers(document.updateAppt.day.value))
+            {
+                alert("Please enter a day that consists only of numbers");
+                return false;
+            }
+            else if(document.updateAppt.day.value.length != 2)
+            {
+                alert("Please input a 2 character value for day");
+                return false;
+            }
+            else if((parseInt(document.updateAppt.day.value) < 0) || (parseInt(document.updateAppt.day.value) > 31))
+            {
+                alert("Please input a valid value for day (Between 1 and 31)");
+                return false;
+            }
+            else if(!validateNumbers(document.updateAppt.year.value))
+            {
+                alert("Please enter a year that consists only of numbers");
+                return false;
+            }
+            else if(document.updateAppt.year.value.length != 4)
+            {
+                alert("Please input a 4 character value for year");
+                return false;
+            }
+            else if(parseInt(document.updateAppt.year.value) < 2016)
+            {
+                alert("Please input a valid value for year. A valid year is 2016 or higher");
+                return false;
+            }
+            else
+            {
+                alert("Your appointment will now be updated");
+                return true;
+            }
+		}
+
+        function validateNumbers(number)
+        {
+            var re = /^([0-9]+)$/;
+            return re.test(number);
+        }
+	</script>
+</head>
+
+<body>
+    <div id="container">
+        <div id="formContainer">
+
+            {% if error_message %}
+                <div id="alert" >
+                    <strong>{{ error_message }}</strong>
+                </div>
+            {% endif %}
+
+                {% if type == "Patient" %}
+                    <h1>Update Your Appointment Below</h1>
+                    <form name = 'updateAppt' action="{% url 'HealthNet:updateApptInfo' appointment.id %}" method="post" onsubmit="return checkform();">
+                        {% csrf_token %}
+
+                        <ul>
+                            <li class="form">To update your appointment, modify the form below</li>
+                            <li class="form">As a Patient, you must select any doctor, and enter a date and a time.</li>
+                        </ul>
+
+                        <div class="formcontent">
+                            <h3>This appointment is for:</h3><h3>{{ patient.firstName }} {{ patient.lastName}}</h3>
+                            <hr />
+                            Select a Doctor:
+                            <select style="display: block" name='doctor'>
+                                <option name="placeholder" value="{{ appointment.doctor.id }}" selected>{{ appointment.doctor.lastName }}, {{ appointment.doctor.firstName }}</option>
+                                {% for doc in doctors %}
+                                    <option name="doc" value="{{ doc.id }}">{{doc.lastName}}, {{ doc.firstName }}</option>
+                                {% endfor %}
+                            </select>
+                            Month:
+                            <select style="display: block" name='month'>
+                                <option name="aplaceholder" value="{{ appointment.month }}" selected>{{ appointment.month }}</option>
+                                <option name="amonth" value="01">January</option>
+                                <option name="amonth" value="02">February</option>
+                                <option name="amonth" value="03">March</option>
+                                <option name="amonth" value="04">April</option>
+                                <option name="amonth" value="05">May</option>
+                                <option name="amonth" value="06">June</option>
+                                <option name="amonth" value="07">July</option>
+                                <option name="amonth" value="08">August</option>
+                                <option name="amonth" value="09">September</option>
+                                <option name="amonth" value="10">October</option>
+                                <option name="amonth" value="11">November</option>
+                                <option name="amonth" value="12">December</option>
+                            </select>
+                            Day:
+                            <input type="text" value="{{ appointment.day }}" name="day" placeholder="Ex.) 01"/>
+                            Year:
+                            <input type="text" value="{{ appointment.year }}" name="year" placeholder="Ex.) 2017"/>
+                            Select a Time:
+                            <select style="display: block" name='appttime'>
+                                <option name="tplaceholder" value="{{ appointment.appttime }}" selected>{{ appointment.appttime }}</option>
+                                <option name="atime" value="01:00">01:00</option>
+                                <option name="atime" value="01:30">01:30</option>
+                                <option name="atime" value="02:00">02:00</option>
+                                <option name="atime" value="02:30">02:30</option>
+                                <option name="atime" value="03:00">03:00</option>
+                                <option name="atime" value="03:30">03:30</option>
+                                <option name="atime" value="04:00">04:00</option>
+                                <option name="atime" value="04:30">04:30</option>
+                                <option name="atime" value="05:00">05:00</option>
+                                <option name="atime" value="05:30">05:30</option>
+                                <option name="atime" value="06:00">06:00</option>
+                                <option name="atime" value="06:30">06:30</option>
+                                <option name="atime" value="07:00">07:00</option>
+                                <option name="atime" value="07:30">07:30</option>
+                                <option name="atime" value="08:00">08:00</option>
+                                <option name="atime" value="08:30">08:30</option>
+                                <option name="atime" value="09:00">09:00</option>
+                                <option name="atime" value="09:30">09:30</option>
+                                <option name="atime" value="10:00">10:00</option>
+                                <option name="atime" value="10:30">10:30</option>
+                                <option name="atime" value="11:00">11:00</option>
+                                <option name="atime" value="11:30">11:30</option>
+                                <option name="atime" value="12:00">12:00</option>
+                                <option name="atime" value="12:30">12:30</option>
+                            </select>
+                            AM or PM:
+                            <select style="display: block" name='phase'>
+                                {% if appointment.phase == "AM" %}
+                                    <option name="AMphase" value="AM" selected>AM</option>
+                                    <option name="PMphase" value="PM">PM</option>
+                                {% else %}
+                                    <option name="PMphase" value="PM" selected>PM</option>
+                                    <option name="AMphase" value="AM">AM</option>
+                                {% endif %}
+                            </select>
+                        </div>
+                        <input type="submit" value="Submit" />
+                    </form>
+
+                    <form action="{% url 'HealthNet:appointments' %}">
+                        <input class="button" type="submit" value="Cancel" />
+                    </form>
+                {% endif %}
+
+                {% if type == "Doctor" %}
+                    <h1>Update The Appointment Below</h1>
+                    <form name = 'updateAppt' action="{% url 'HealthNet:updateApptInfo' appointment.id %}" method="post" onsubmit="return checkform();">
+                    {% csrf_token %}
+
+                        <ul>
+                            <li class="form">To update the appointment, modify the form below</li>
+                            <li class="form">As a Doctor, you must select any doctor from your workplace, and enter a date and a time.</li>
+                        </ul>
+
+                        <div class="formcontent">
+                            <h3>This appointment is for:</h3><h3>{{ patient.firstName }} {{ patient.lastName}}</h3>
+                            <hr />
+                            Select a Doctor:
+                            <select style="display: block" name='doctor'>
+                                <option name="placeholder" value="{{ appointment.doctor.id }}" selected>{{ appointment.doctor.lastName }}, {{ appointment.doctor.firstName }}</option>
+                                {% for doc in doctors %}
+                                    <option name="doc" value="{{ doc.id }}">{{doc.lastName}}, {{ doc.firstName }}</option>
+                                {% endfor %}
+                            </select>
+                            Month:
+                            <select style="display: block" name='month'>
+                                <option name="aplaceholder" value="{{ appointment.month }}" selected>{{ appointment.month }}</option>
+                                <option name="amonth" value="01">January</option>
+                                <option name="amonth" value="02">February</option>
+                                <option name="amonth" value="03">March</option>
+                                <option name="amonth" value="04">April</option>
+                                <option name="amonth" value="05">May</option>
+                                <option name="amonth" value="06">June</option>
+                                <option name="amonth" value="07">July</option>
+                                <option name="amonth" value="08">August</option>
+                                <option name="amonth" value="09">September</option>
+                                <option name="amonth" value="10">October</option>
+                                <option name="amonth" value="11">November</option>
+                                <option name="amonth" value="12">December</option>
+                            </select>
+                            Day:
+                            <input type="text" value="{{ appointment.day }}" name="day" placeholder="Ex.) 01"/>
+                            Year:
+                            <input type="text" value="{{ appointment.year }}" name="year" placeholder="Ex.) 2017"/>
+                            Select a Time:
+                            <select style="display: block" name='appttime'>
+                                <option name="tplaceholder" value="{{ appointment.appttime }}" selected>{{ appointment.appttime }}</option>
+                                <option name="atime" value="01:00">01:00</option>
+                                <option name="atime" value="01:30">01:30</option>
+                                <option name="atime" value="02:00">02:00</option>
+                                <option name="atime" value="02:30">02:30</option>
+                                <option name="atime" value="03:00">03:00</option>
+                                <option name="atime" value="03:30">03:30</option>
+                                <option name="atime" value="04:00">04:00</option>
+                                <option name="atime" value="04:30">04:30</option>
+                                <option name="atime" value="05:00">05:00</option>
+                                <option name="atime" value="05:30">05:30</option>
+                                <option name="atime" value="06:00">06:00</option>
+                                <option name="atime" value="06:30">06:30</option>
+                                <option name="atime" value="07:00">07:00</option>
+                                <option name="atime" value="07:30">07:30</option>
+                                <option name="atime" value="08:00">08:00</option>
+                                <option name="atime" value="08:30">08:30</option>
+                                <option name="atime" value="09:00">09:00</option>
+                                <option name="atime" value="09:30">09:30</option>
+                                <option name="atime" value="10:00">10:00</option>
+                                <option name="atime" value="10:30">10:30</option>
+                                <option name="atime" value="11:00">11:00</option>
+                                <option name="atime" value="11:30">11:30</option>
+                                <option name="atime" value="12:00">12:00</option>
+                                <option name="atime" value="12:30">12:30</option>
+                            </select>
+                            AM or PM:
+                            <select style="display: block" name='phase'>
+                                {% if appointment.phase == "AM" %}
+                                    <option name="AMphase" value="AM" selected>AM</option>
+                                    <option name="PMphase" value="PM">PM</option>
+                                {% else %}
+                                    <option name="PMphase" value="PM" selected>PM</option>
+                                    <option name="AMphase" value="AM">AM</option>
+                                {% endif %}
+                            </select>
+                        </div>
+                        <input type="submit" value="Submit" />
+                    </form>
+
+                    <form action="{% url 'HealthNet:appointments' %}">
+                        <input class="button" type="submit" value="Cancel" />
+                    </form>
+                {% endif %}
+
+                {% if type == "Nurse" %}
+                    <h1>Update The Appointment Below</h1>
+                    <form name = 'updateAppt' action="{% url 'HealthNet:updateApptInfo' appointment.id %}" method="post" onsubmit="return checkform();">
+                    {% csrf_token %}
+
+                        <ul>
+                            <li class="form">To update the appointment, modify the form below</li>
+                            <li class="form">As a Nurse, you must select any doctor from your workplace, and enter a date and a time.</li>
+                        </ul>
+
+                        <div class="formcontent">
+                            <h3>This appointment is for:</h3><h3>{{ patient.firstName }} {{ patient.lastName}}</h3>
+                            <hr />
+                            Select a Doctor:
+                            <select style="display: block" name='doctor'>
+                                <option name="placeholder" value="{{ appointment.doctor.id }}" selected>{{ appointment.doctor.lastName }}, {{ appointment.doctor.firstName }}</option>
+                                {% for doc in doctors %}
+                                    <option name="doc" value="{{ doc.id }}">{{doc.lastName}}, {{ doc.firstName }}</option>
+                                {% endfor %}
+                            </select>
+                            Month:
+                            <select style="display: block" name='month'>
+                                <option name="aplaceholder" value="{{ appointment.month }}" selected>{{ appointment.month }}</option>
+                                <option name="amonth" value="01">January</option>
+                                <option name="amonth" value="02">February</option>
+                                <option name="amonth" value="03">March</option>
+                                <option name="amonth" value="04">April</option>
+                                <option name="amonth" value="05">May</option>
+                                <option name="amonth" value="06">June</option>
+                                <option name="amonth" value="07">July</option>
+                                <option name="amonth" value="08">August</option>
+                                <option name="amonth" value="09">September</option>
+                                <option name="amonth" value="10">October</option>
+                                <option name="amonth" value="11">November</option>
+                                <option name="amonth" value="12">December</option>
+                            </select>
+                            Day:
+                            <input type="text" value="{{ appointment.day }}" name="day" placeholder="Ex.) 01"/>
+                            Year:
+                            <input type="text" value="{{ appointment.year }}" name="year" placeholder="Ex.) 2017"/>
+                            Select a Time:
+                            <select style="display: block" name='appttime'>
+                                <option name="tplaceholder" value="{{ appointment.appttime }}" selected>{{ appointment.appttime }}</option>
+                                <option name="atime" value="01:00">01:00</option>
+                                <option name="atime" value="01:30">01:30</option>
+                                <option name="atime" value="02:00">02:00</option>
+                                <option name="atime" value="02:30">02:30</option>
+                                <option name="atime" value="03:00">03:00</option>
+                                <option name="atime" value="03:30">03:30</option>
+                                <option name="atime" value="04:00">04:00</option>
+                                <option name="atime" value="04:30">04:30</option>
+                                <option name="atime" value="05:00">05:00</option>
+                                <option name="atime" value="05:30">05:30</option>
+                                <option name="atime" value="06:00">06:00</option>
+                                <option name="atime" value="06:30">06:30</option>
+                                <option name="atime" value="07:00">07:00</option>
+                                <option name="atime" value="07:30">07:30</option>
+                                <option name="atime" value="08:00">08:00</option>
+                                <option name="atime" value="08:30">08:30</option>
+                                <option name="atime" value="09:00">09:00</option>
+                                <option name="atime" value="09:30">09:30</option>
+                                <option name="atime" value="10:00">10:00</option>
+                                <option name="atime" value="10:30">10:30</option>
+                                <option name="atime" value="11:00">11:00</option>
+                                <option name="atime" value="11:30">11:30</option>
+                                <option name="atime" value="12:00">12:00</option>
+                                <option name="atime" value="12:30">12:30</option>
+                            </select>
+                            AM or PM:
+                            <select style="display: block" name='phase'>
+                                {% if appointment.phase == "AM" %}
+                                    <option name="AMphase" value="AM" selected>AM</option>
+                                    <option name="PMphase" value="PM">PM</option>
+                                {% else %}
+                                    <option name="PMphase" value="PM" selected>PM</option>
+                                    <option name="AMphase" value="AM">AM</option>
+                                {% endif %}
+                            </select>
+                        </div>
+                        <input type="submit" value="Submit" />
+                    </form>
+
+                    <form action="{% url 'HealthNet:appointments' %}">
+                        <input class="button" type="submit" value="Cancel" />
+                    </form>
+                {% endif %}
+        </div>
+    </div>
+</body>
+</html>

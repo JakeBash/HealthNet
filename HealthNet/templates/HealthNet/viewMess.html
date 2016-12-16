@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'HAccelerator/formPages.css' %}" />
+<link rel='shortcut icon' href={% static 'HAccelerator/images/favicon.ico' %} type='images/favicon' />
+
+<head>
+	<title>HealthNet | View Message</title>
+</head>
+
+<body>
+    <div id="container">
+        <div id="formContainer">
+            <h1>Subject: {{ message.subjectLine }}</h1>
+            <p>{{ message.message }}</p>
+            <form action="{% url 'HealthNet:messages' %}">
+                <input class="button" type="submit" value="Back" />
+            </form>
+           <form action="{% url 'HealthNet:deleteMess' message.id %}">
+                <input class="button" type="submit" value="Delete" />
+            </form>
+			<form action="{% url 'HealthNet:replyMess' message.id %} %}">
+                <input class="button" type="submit" value="Reply" />
+            </form>
+        </div>
+    </div>
+</body>
+</html>

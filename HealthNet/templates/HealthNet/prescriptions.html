@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'HAccelerator/mainPages.css' %}" />
+<link rel='shortcut icon' href={% static 'HAccelerator/images/favicon.ico' %} type='images/favicon' />
+
+<head>
+	<title>HealthNet | Prescriptions</title>
+</head>
+
+<ul class="nav">
+	<li class="nav_container"><a class="nav_items" href="{% url 'HealthNet:home' %}">Home</a></li>
+	<li class="nav_container"><a class="nav_items" href="{% url 'HealthNet:information' %}">User Information</a></li>
+	<li class="nav_container"><a class="nav_items" href="{% url 'HealthNet:appointments' %}">Manage Appointments</a></li>
+    <li class="nav_container"><a class="nav_item_active" href="{% url 'HealthNet:prescriptions' %}">Prescriptions</a></li>
+	<li class="nav_container"><a class="nav_items" href="{% url 'HealthNet:calendar' %}">Calendar</a></li>
+	<li class="nav_container"><a class="nav_items" href="{% url 'HealthNet:messages' %}">Messages</a></li>
+	<li style="float:right" class="nav_container"><a class="nav_items" href="{% url 'HealthNet:logOut' %}">Log Out</a></li>
+</ul>
+
+<body>
+    <div id="container">
+        <div id="tablecontainer">
+            {% if type == "Patient" %}
+                <h2><span style="text-decoration: underline;">{{ patient.firstName }} {{ patient.lastName }}</span>, these are the prescriptions that have been assigned to you</h2>
+            {% elif type == "Doctor" %}
+                <h2><span style="text-decoration: underline;">{{ employee.firstName }} {{ employee.lastName }}</span>, these are the prescriptions that you have created</h2>
+            {% else %}
+                <h2><span style="text-decoration: underline;">{{ employee.firstName }} {{ employee.lastName }}</span>, these are the prescriptions for patients at <span style="text-decoration: underline;">{{ employee.workplace.name }}</span></h2>
+            {% endif %}
+            {% if prescriptions %}
+	            <table>
+                    <tr>
+                        <th>Name</th>
+                        <th>Dosage</th>
+                        {% if type == "Patient"%}
+
+                        {% else %}
+                            <th>Patient</th>
+                        {% endif %}
+
+                        {% if type == "Doctor"%}
+                            <th></th>
+                        {% else %}
+                            <th>Doctor</th>
+                        {% endif %}
+                    </tr>
+                    {% for p in prescriptions %}
+                        <tr>
+                            {% if type == "Doctor"%}
+                                <td><a href="{% url 'HealthNet:updatePres' p.id %}">{{ p.name }}</a></td>
+                            {% else %}
+                                <td>{{ p.name }}</td>
+                            {% endif %}
+
+                            <td>{{ p.dosage }}</td>
+
+                            {% if type == "Patient"%}
+
+                            {% else %}
+                                <td>{{ p.patient }}</td>
+                            {% endif %}
+
+                            {% if type == "Doctor"%}
+                                <td><form action="{% url 'HealthNet:removePres' p.id %}"><input type="submit" value="Remove" /></form></td>
+                            {% else %}
+                                <td>{{ p.doctor }}</td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p>There are no prescriptions to view</p>
+            {% endif %}
+
+            {% if type == "Doctor" %}
+                <h2>These are the prescriptions for patients at <span style="text-decoration: underline;">{{ employee.workplace.name }}</span></h2>
+                {% if presatw %}
+                    <table>
+                        <tr>
+                            <th>Name</th>
+                            <th>Dosage</th>
+                            <th>Patient</th>
+                            <th></th>
+                        </tr>
+                        {% for p in presatw %}
+                            <tr>
+                                <td><a href="{% url 'HealthNet:updatePres' p.id %}">{{ p.name }}</a></td>
+                                <td>{{ p.dosage }}</td>
+                                <td>{{ p.patient }}</td>
+                                <td><form action="{% url 'HealthNet:removePres' p.id %}"><input type="submit" value="Remove" /></form></td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                {% else %}
+                    <p>There are no prescriptions to view</p>
+                {% endif %}
+
+                <br>
+
+                <form action="{% url 'HealthNet:createPres' %}">
+                    <input type="submit" value="Create Prescription" />
+                </form>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'HAccelerator/mainPages.css' %}" />
+<link rel='shortcut icon' href={% static 'HAccelerator/images/favicon.ico' %} type='images/favicon' />
+
+<head>
+	<title>HealthNet | Tests</title>
+</head>
+
+<ul class="nav">
+	<li class="nav_container"><a class="nav_items" href="{% url 'HealthNet:home' %}">Home</a></li>
+	<li class="nav_container"><a class="nav_item_active" href="{% url 'HealthNet:information' %}">User Information</a></li>
+	<li class="nav_container"><a class="nav_items" href="{% url 'HealthNet:appointments' %}">Manage Appointments</a></li>
+    <li class="nav_container"><a class="nav_items" href="{% url 'HealthNet:prescriptions' %}">Prescriptions</a></li>
+	<li class="nav_container"><a class="nav_items" href="{% url 'HealthNet:calendar' %}">Calendar</a></li>
+	<li class="nav_container"><a class="nav_items" href="{% url 'HealthNet:messages' %}">Messages</a></li>
+	<li style="float:right" class="nav_container"><a class="nav_items" href="{% url 'HealthNet:logOut' %}">Log Out</a></li>
+</ul>
+
+<body>
+    <div id="container">
+        <div id="tablecontainer">
+            <h2>Tests</h2>
+                {% if test %}
+                    <table>
+                        <tr>
+                            <th>Name</th>
+                            <th>Released?</th>
+                            <th>Release</th>
+                        </tr>
+                        {% for t in test %}
+                            <tr>
+                                <td>{{ t.name }}</td>
+                                {% if t.released == True %}
+                                    <td>Released</td>
+                                {% else %}
+                                    <td>Unreleased</td>
+                                {% endif %}
+                                {% if t.released == True %}
+                                    <td>Already Released</td>
+                                {% else %}
+                                    <td><form action="{% url 'HealthNet:releaseTest' t.id %}"><input type="submit" value="Release" /></form></td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    </table>
+                {% else %}
+                    <p>There are no tests for this patient yet</p>
+                {% endif %}
+
+            <br>
+
+            <form action="{% url 'HealthNet:createTest' patient.id%}">
+                {% csrf_token %}
+				<input type="submit" value="Create New Test" />
+            </form>
+
+            <br>
+
+            <form action="{% url 'HealthNet:information' %}">
+                <input class="button" type="submit" value="Return" />
+            </form>
+        </div>
+    </div>
+</body>
+</html>

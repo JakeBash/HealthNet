@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'HAccelerator/formPages.css' %}" />
+<link rel='shortcut icon' href={% static 'HAccelerator/images/favicon.ico' %} type='images/favicon' />
+
+<head>
+    <title>HealthNet | Create Test</title>
+</head>
+
+<body>
+    <div id="container">
+        <div id="formContainer">
+            <h1>Create a New Test</h1>
+            <form name = 'create' action="{% url 'HealthNet:createTestInfo' patient.id %}" method="post" enctype="multipart/form-data" method="post">
+
+                {% csrf_token %}
+
+                <ul>
+                    <li class="form">To create a test, fill out the from below</li>
+                </ul>
+
+                <div class="formcontent">
+                    Enter the test's name:
+                    <input type="text"	name="name" placeholder="Ex.) Blood Pressure"/>
+                    Enter any comments you have for the patient:
+                    <input type="text" name="description" placeholder="Ex.) Limit your sugar intake"/>
+                    Upload any files that you wish to include in the test:
+                    <input type="file" name="file"/>
+                </div>
+                <input type="submit" value="Submit" />
+            </form>
+
+            <form action="{% url 'HealthNet:tests' patient.id %}">
+                <input class="button" type="submit" value="Cancel" />
+            </form>
+        </div>
+    </div>
+</body>
+</html>

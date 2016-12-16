@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'HAccelerator/mainPages.css' %}" />
+<link rel='shortcut icon' href={% static 'HAccelerator/images/favicon.ico' %} type='images/favicon' />
+
+<head>
+	<title>HealthNet | Tests</title>
+</head>
+
+<ul class="nav">
+	<li class="nav_container"><a class="nav_items" href="{% url 'HealthNet:home' %}">Home</a></li>
+	<li class="nav_container"><a class="nav_item_active" href="{% url 'HealthNet:information' %}">User Information</a></li>
+	<li class="nav_container"><a class="nav_items" href="{% url 'HealthNet:appointments' %}">Manage Appointments</a></li>
+    <li class="nav_container"><a class="nav_items" href="{% url 'HealthNet:prescriptions' %}">Prescriptions</a></li>
+	<li class="nav_container"><a class="nav_items" href="{% url 'HealthNet:calendar' %}">Calendar</a></li>
+	<li class="nav_container"><a class="nav_items" href="{% url 'HealthNet:messages' %}">Messages</a></li>
+	<li style="float:right" class="nav_container"><a class="nav_items" href="{% url 'HealthNet:logOut' %}">Log Out</a></li>
+</ul>
+<body>
+    <div id="container">
+        <h1>Test Result: <span style="text-decoration: underline">{{ test.name }} </span></h1>
+        <h3>Released By Doctor: <span style="text-decoration: underline">{{ test.doctor.firstName }} {{test.doctor.lastName }}</span></h3>
+        <h3>Description: {{ test.description }} </h3>
+        {% if test.testResults != "" %}
+            <h4>To download the Uploaded Files click Download below.</h4>
+            <h3><a class="alink" href={{ test.testResults.url }} download>Download</a></h3>
+        {% endif %}
+			
+        <form action="{% url 'HealthNet:information' %}">
+            <input class="button" type="submit" value="Return" />
+        </form>
+    </div>
+</body>
+</html>

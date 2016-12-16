@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+
+{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'HAccelerator/mainPages.css' %}" />
+<link rel='shortcut icon' href={% static 'HAccelerator/images/favicon.ico' %} type='images/favicon' />
+
+<head>
+    <title>HealthNet | Calendar</title>
+    <script type="text/javascript">
+        // this array holds names for the days of the week
+        days_labels = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+
+        // this array holds names for month in order from first to last
+        months_labels = ['January', 'February', 'March', 'April', 'May', 'June',
+                         'July', 'August', 'September', 'October', 'November', 'December'];
+
+        // this stores the current date
+        current_date = new Date();
+
+        // function to initialize a calendar
+        function Calendar(month, year) {
+            this.month = (isNaN(month) || month==null) ? current_date.getMonth() : month;
+            this.year = (isNaN(year) || year==null) ? current_date.getFullYear() : year;
+            this.html = '';
+        }
+
+        // helper function to display the previous month
+        function prev_Month(calendar) {
+            if( calendar.month > 0 ) {
+                calendar.month -= 1;
+            } else {
+                calendar.month = 11;
+                calendar.year -= 1;
+            }
+            calendar.generate_display();
+            document.getElementById("display").innerHTML = calendar.get_display();
+            appointments_in_month(calendar);
+        }
+
+        // helper function to display the next month
+        function next_Month(calendar) {
+            if( calendar.month < 11 ) {
+                calendar.month += 1;
+            } else {
+                calendar.month = 0;
+                calendar.year += 1;
+            }
+            calendar.generate_display();
+            document.getElementById("display").innerHTML = calendar.get_display();
+            appointments_in_month(calendar);
+        }
+
+        function appointments_in_month(calendar) {
+            document.getElementById("appts").innerHTML = get_appts(calendar.month, calendar.year);
+        }
+
+        function get_appts(month, year){
+            var html = '';
+            var tempmonth = (month + 1).toString();
+            if((month + 1) < 10)
+                    tempmonth = '0' + tempmonth;
+            // JavaScript number to string: var num = 15; var n = num.toString(); result: "15"
+            html += '{% if appointments %}';
+                html += '<table>';
+                    html += '<tr>';
+                        html += '<th>Date And Time</th>';
+                        html += '<th>Location</th>';
+                        html += '<th>Patient</th>';
+                        html += '<th>Doctor</th>';
+                    html += '</tr>';
+                    html += '{% for appointment in appointments %}';
+
+                        if( (tempmonth == "{{ appointment.month }}") &&
+                                ((year).toString() == "{{ appointment.year }}") ){
+                            html += '<tr>';
+                            html += '<td>{{ appointment.month }}.{{ appointment.day }}.{{ appointment.year }},' +
+                                    '&nbsp {{ appointment.appttime }} {{ appointment.phase }}</td>';
+                            html += '<td>{{ appointment.location }}</td>';
+                            html += '<td>{{ appointment.patient }}</td>';
+                            html += '<td>{{ appointment.doctor }}</td>';
+                            html += '</tr>';
+                        }
+                    html += '{% endfor %}';
+                html += '</table>';
+            html += '{% else %}';
+                html += '<p>You have no appointments in this month.</p>';
+            html += '{% endif %}';
+            return html;
+        }
+
+        // function to generate the month display
+        Calendar.prototype.generate_display = function() {
+            // get the first day of the current month
+            var day_one = new Date(this.year, this.month, 1);
+            var start_day = day_one.getDay();
+
+            // find the number of days in the month
+            var temp_d = new Date(this.year, this.month + 1, 0);
+            var month_len = temp_d.getDate();
+
+            // create the header
+            var month_name = months_labels[this.month];
+            var html = '<table align="center"><tr><th colspan="7">';
+            html += month_name + "&nbsp;" + this.year;
+            html += '</th></tr><tr>';
+            for( var i = 0; i <= 6; i++ ) {
+                html += '<td>';
+                html += days_labels[i];
+                html += '</td>';
+            }
+            html += '</tr><tr>';
+
+            var tempmonth = (this.month + 1).toString();
+            if((this.month + 1) < 10)
+                    tempmonth = '0' + tempmonth;
+            // fill in the days of the month
+            // first loop does the rows (weeks)
+            html += '{% if appointments %}';
+                var cur_day = 1;
+                var day_as_string = '01';
+                var found = 'False';
+                for ( var r = 0; r < Math.ceil((month_len + start_day) / 7); r++) {
+                    // nested loop does cols (days)
+                    for ( var c = 0; c <= 6; c++ ) {
+                        html += '<td';
+                        html += '{% for appointment in appointments %}';
+                                if( (tempmonth == "{{ appointment.month }}") &&
+                                        (day_as_string == "{{ appointment.day }}") &&
+                                        ((this.year).toString() == "{{ appointment.year }}") && (found!='True') ){
+                                    html += ' style="background-color:#0D6BB4">';
+                                    found = 'True';
+                                }
+                        html += '{% endfor %}';
+                        if( cur_day <= month_len && ( r > 0 || c >= start_day)) {
+                            if(found == 'True')
+                                html += cur_day;
+                            else{
+                                html += '>';
+                                html += cur_day;
+                            }
+                            cur_day++;
+                            found = 'False';
+                            if(cur_day < 10){
+                                day_as_string = '0' + cur_day.toString();
+                            }else{
+                                day_as_string = cur_day.toString();
+                            }
+                        }
+                        else
+                            html += '>';
+                        html += '</td>';
+                    }
+                    html += '</tr><tr>';
+                }
+                html += '</tr></table>';
+            html += '{% else %}';
+                var cur_day = 1;
+                for ( var r = 0; r < Math.ceil((month_len + start_day) / 7); r++) {
+                    // nested loop does cols (days)
+                    for ( var c = 0; c <= 6; c++ ) {
+
+                        html += '<td>';
+                        if( cur_day <= month_len && ( r > 0 || c >= start_day)) {
+                            html += cur_day;
+                            cur_day++;
+                        }
+                        html += '</td>';
+                    }
+                    html += '</tr><tr>';
+                }
+                html += '</tr></table>';
+            html += '{% endif %}';
+            // set calendar's html to the new code
+            this.html = html;
+        }
+
+        // display the calender using html code
+        Calendar.prototype.get_display = function() {
+            return this.html;
+        }
+    </script>
+</head>
+
+<ul class="nav">
+    <li class="nav_container"><a class="nav_items" href="{% url 'HealthNet:home' %}">Home</a></li>
+	<li class="nav_container"><a class="nav_items" href="{% url 'HealthNet:information' %}">User Information</a></li>
+	<li class="nav_container"><a class="nav_items" href="{% url 'HealthNet:appointments' %}">Manage Appointments</a></li>
+    <li class="nav_container"><a class="nav_items" href="{% url 'HealthNet:prescriptions' %}">Prescriptions</a></li>
+	<li class="nav_container"><a class="nav_item_active" href="{% url 'HealthNet:calendar' %}">Calendar</a></li>
+	<li class="nav_container"><a class="nav_items" href="{% url 'HealthNet:messages' %}">Messages</a></li>
+	<li style="float:right" class="nav_container"><a class="nav_items" href="{% url 'HealthNet:logOut' %}">Log Out</a></li>
+</ul>
+
+<body>
+    <div id="container">
+        <div id="tableContainer">
+            <h2>Calendar</h2>
+            <!-- buttons to use month change helper functions -->
+            <input type="button" value="Next Month" onclick="next_Month(calendar)" />
+            <br>
+            <br>
+            <input type="button" value="Previous Month" onclick="prev_Month(calendar)" />
+            <!-- will use this html paragraph element to display calendar -->
+            <p id="display"></p>
+            <p id="appts"></p>
+            <script type="text/javascript">
+                var calendar = new Calendar();
+                calendar.generate_display();
+                document.getElementById("display").innerHTML = calendar.get_display();
+                appointments_in_month(calendar);
+            </script>
+        </div>
+    </div>
+</body>
+</html>

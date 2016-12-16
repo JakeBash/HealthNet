@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+
+{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'HAccelerator/formPages.css' %}" />
+<link rel='shortcut icon' href={% static 'HAccelerator/images/favicon.ico' %} type='images/favicon' />
+
+<head>
+	<title>HealthNet | Staff Registration</title>
+	<script type="text/javascript">
+		function checkform()
+		{
+            if(document.registerDN.firstName.value.length==0)
+			{
+				alert("You must enter a first name");
+				return false;
+			}
+            else if(!validateText(document.registerDN.firstName.value))
+            {
+                alert("Please enter a valid first name (No numbers)");
+                return false;
+            }
+            else if(document.registerDN.lastName.value.length==0)
+			{
+				alert("You must enter a last name");
+				return false;
+			}
+            else if(!validateText(document.registerDN.lastName.value))
+            {
+                alert("Please enter a valid last name (No numbers)");
+                return false;
+            }
+            else if(document.registerDN.type.value == "Please Select a User Type")
+            {
+                alert("Please select a valid user type");
+                return false;
+            }
+			else if(document.registerDN.username.value.length==0)
+			{
+				alert("You must input a username");
+				return false;
+			}
+			else if(document.registerDN.username.length > 30)
+            {
+                alert("The username you entered is too large, please shorten it to 30 characters or smaller");
+				return false;
+            }
+			else if(document.registerDN.password.value.length==0)
+			{
+				alert("You must input a password");
+				return false;
+			}
+            else if(document.registerDN.password.value.length < 12)
+            {
+                alert("The password you entered is too small, please make it between 12 and 30 characters");
+				return false;
+            }
+			else if(document.registerDN.password.value.length > 30)
+            {
+                alert("The password you entered is too large, please make it between 12 and 30 character");
+				return false;
+            }
+            else if(document.registerDN.password.value.match(/[!@#$%\^&*)(+=._-]+/) == null)
+			{
+				alert("You must include a special character in the password (!@#$%\^&*)(+=._-)");
+				return false;
+			}
+            else if(document.registerDN.password.value.match(/[A-Z]+/) == null)
+			{
+				alert("You must include a capital letter in the password");
+				return false;
+			}
+            else if(document.registerDN.password.value.match(/[0-9]+/) == null)
+			{
+				alert("You must include a number in the password");
+				return false;
+			}
+            else if(document.registerDN.password.value.match(/[a-z]+/) == null)
+			{
+				alert("You must include a lowercase letter in the password");
+				return false;
+			}
+            else if(document.registerDN.password.value.indexOf(document.register.username.value) > -1)
+			{
+				alert("The password cannot contain the username");
+				return false;
+			}
+            else if(document.registerDN.match.value.length==0)
+            {
+                alert("You must confirm the password");
+                return false;
+            }
+			else if(!(document.registerDN.password.value==document.registerDN.match.value))
+			{
+				alert("You failed to confirm the password, please try again.");
+				return false;
+			}
+			else
+            {
+			    alert("Thank you for submitting!");
+                return true;
+            }
+		}
+
+        function validateText(text)
+        {
+            var re = /^[a-zA-Z\s]+$/;
+            return re.test(text);
+        }
+	</script>
+
+    <script>
+        function openInfo(evt, infoType)
+        {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(infoType).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+    </script>
+</head>
+
+<body>
+    <div id="container">
+        <div id="formContainer">
+            <h1>Register Staff at {{ admin.workplace }}</h1>
+
+            {% if error_message %}
+                <div id="alert" >
+                    <strong>{{ error_message }}</strong>
+                </div>
+            {% endif %}
+
+            <form name = 'registerDN' action="{% url 'HealthNet:createDNLogIn' %}" method="post" onsubmit="return checkform();">
+                {% csrf_token %}
+                <ul>
+                    <li><a href="javascript:void(0)" class="tablinks" onclick="openInfo(event, 'pInfo')" id="defaultOpen">Personal Information</a></li>
+                    <li><a href="javascript:void(0)" class="tablinks" onclick="openInfo(event, 'aInfo')">Account Information</a></li>
+                </ul>
+
+                <div id="pInfo" class="tabcontent">
+                    Enter a first name:
+                    <input type="text" name="firstName" placeholder="First Name"/>
+                    Enter a last name:
+                    <input type="text" name="lastName" placeholder="Last Name"/>
+                    Select a user type:
+                    <select style="display: block" name='type'>
+                        <option name="type1" value="Please Select a User Type" selected disabled hidden>Please Select a User Type</option>
+                        <option name="type2" value="Doctor">Doctor</option>
+                        <option name="type3" value="Nurse">Nurse</option>
+                        <option name="type4" value="Administrator">Administrator</option>
+                    </select>
+                </div>
+
+                <div id="aInfo" class="tabcontent">
+                    Enter a username:
+                    <input type="text" name="username" placeholder="Username"/>
+                    Create a password:
+                    <input type="password" name="password" placeholder="Ex.) abcABC123!@#"/>
+                    Confirm the password:
+                    <input type="password" name="match" placeholder="Confirm Password"/>
+                </div>
+
+                <input type="submit" value="Submit" />
+            </form>
+
+            <form action="{% url 'HealthNet:home' %}">
+                <input class="button" type="submit" value="Cancel" />
+            </form>
+
+            <script>
+                document.getElementById("defaultOpen").click()
+            </script>
+        </div>
+    </div>
+</body>
+</html>

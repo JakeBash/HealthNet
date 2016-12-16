@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+
+{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'HAccelerator/formPages.css' %}" />
+<link rel='shortcut icon' href={% static 'HAccelerator/images/favicon.ico' %} type='images/favicon' />
+
+<head>
+	<title>HealthNet | Registration</title>
+	<script type="text/javascript">
+		function checkform()
+		{
+            if(document.register.firstName.value.length==0)
+			{
+				alert("You must enter a first name");
+				return false;
+			}
+            else if(!validateWord(document.register.firstName.value))
+            {
+                alert("Please enter a valid first name (No numbers)");
+                return false;
+            }
+            else if(document.register.lastName.value.length==0)
+			{
+				alert("You must enter a last name");
+				return false;
+			}
+            else if(!validateWord(document.register.lastName.value))
+            {
+                alert("Please enter a valid last name (No numbers)");
+                return false;
+            }
+            else if(document.register.address.value.length == 0)
+            {
+                alert(" Please enter an address");
+				return false;
+            }
+            else if(document.register.number.value.length == 0)
+            {
+                alert("Please enter a phone number");
+                return false;
+            }
+            else if(!validatePhone(document.register.number.value))
+            {
+                alert(document.register.number.value + " is incorrectly formatted, use (123)456-7890 instead");
+				return false;
+            }
+            else if(document.register.email.value.length == 0)
+            {
+                alert("Please enter an email address");
+                return false;
+            }
+            else if(!validateEmail(document.register.email.value))
+            {
+                alert(document.register.email.value + " is incorrectly formatted, use example@email.com/net/org/etc. instead");
+				return false;
+            }
+            else if(document.register.provider.value.length == 0)
+            {
+                alert("Please enter an insurance provider");
+                return false;
+            }
+            else if(document.register.insuranceid.value.length == 0)
+            {
+                alert("Please enter an insurance ID number");
+                return false;
+            }
+            else if(!validateID(document.register.insuranceid.value))
+            {
+                alert("Your ID is improperly formatted. Use 3 letters followed by 9 digits");
+                return false;
+            }
+            else if(document.register.contactfname.value.length==0)
+			{
+				alert("You must enter a first name for your contact");
+				return false;
+			}
+            else if(!validateWord(document.register.contactfname.value))
+            {
+                alert("Please enter a valid first name for your contact(No numbers)");
+                return false;
+            }
+            else if(document.register.contactlname.value.length==0)
+			{
+				alert("You must enter a last name for your contact");
+				return false;
+			}
+            else if(!validateWord(document.register.contactlname.value))
+            {
+                alert("Please enter a valid last name for your contact(No numbers)");
+                return false;
+            }
+            else if(document.register.contactaddress.value.length == 0)
+            {
+                alert(" Please enter an address for your contact");
+				return false;
+            }
+            else if(document.register.contactnumber.value.length == 0)
+            {
+                alert("Please enter a phone number for your contact");
+                return false;
+            }
+            else if(!validatePhone(document.register.contactnumber.value))
+            {
+                alert(document.register.contactnumber.value + " is incorrectly formatted, use (123)456-7890 instead");
+				return false;
+            }
+            else if(document.register.height.value.length == 0)
+            {
+                alert("Please enter a height");
+                return false;
+            }
+            else if (!validateHeight(document.register.height.value))
+            {
+                alert(document.register.height.value + " is incorrectly formatted, use  0\'00\" instead");
+				return false;
+            }
+            else if(document.register.weight.value.length == 0)
+            {
+                alert("Please enter a weight");
+                return false;
+            }
+            else if (!validateWeight(document.register.weight.value))
+            {
+                alert(document.register.weight.value + " is incorrectly formatted, use  000.00 instead");
+				return false;
+            }
+            else if (document.register.allergies.value.length==0)
+            {
+                alert("Please enter None if there are no allergies");
+                return false;
+            }
+            else if (document.register.gender.value == "Please Select a Gender")
+            {
+                alert("Please select a valid gender");
+                return false;
+            }
+			else if(document.register.username.value.length==0)
+			{
+				alert("You must input a username");
+				return false;
+			}
+            else if(document.register.username.length > 30)
+            {
+                alert("Your username is too large, please make it 30 characters or smaller");
+				return false;
+            }
+			else if(document.register.password.value.length==0)
+			{
+				alert("You must input a password");
+				return false;
+			}
+            else if(document.register.password.value.length < 12)
+            {
+                alert("Your password is too small, please make it between 12 and 30 characters");
+				return false;
+            }
+            else if(document.register.password.value.length > 30)
+            {
+                alert("Your password is too large, please make it between 12 and 30 characters");
+				return false;
+            }
+            else if(document.register.password.value.match(/[!@#$%\^&*)(+=._-]+/) == null)
+			{
+				alert("You must include a special character in your password (!@#$%\^&*)(+=._-)");
+				return false;
+			}
+            else if(document.register.password.value.match(/[A-Z]+/) == null)
+			{
+				alert("You must include a capital letter in your password");
+				return false;
+			}
+            else if(document.register.password.value.match(/[0-9]+/) == null)
+			{
+				alert("You must include a number in your password");
+				return false;
+			}
+            else if(document.register.password.value.match(/[a-z]+/) == null)
+			{
+				alert("You must include a lowercase letter in your password");
+				return false;
+			}
+            else if(document.register.password.value.indexOf(document.register.username.value) > -1)
+			{
+				alert("Your password cannot contain your username");
+				return false;
+			}
+			else if(!(document.register.password.value==document.register.match.value))
+			{
+				alert("You failed to confirm your password, please try again.");
+				return false;
+			}
+			else
+            {
+			    alert("Thank you for submitting!");
+                return true;
+            }
+		}
+
+        function validateEmail(email)
+        {
+            var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test(email);
+        }
+
+        function validatePhone(phone)
+        {
+            var re = /^(\([0-9]{3}\))[0-9]{3}-[0-9]{4}$/;
+            return re.test(phone);
+        }
+
+        function validateWord(word)
+        {
+            var re = /^[a-zA-Z\s]+$/;
+            return re.test(word);
+        }
+
+        function validateHeight(height)
+        {
+            var re = /^\d'(\d{1,2}")?$/;
+            return re.test(height);
+        }
+
+        function validateWeight(weight)
+        {
+            var re = /^([1-9]\d|[1-9]\d\d)(\.\d\d)$/;
+            return re.test(weight);
+        }
+
+        function validateID(id)
+        {
+            var re = /^([A-Z]{3})([0-9]{9})$/;
+            return re.test(id);
+        }
+	</script>
+
+    <script>
+        function openInfo(evt, infoType)
+        {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(infoType).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+    </script>
+</head>
+
+<body>
+    <div id="container">
+        <div id="formContainer">
+            <h1>HealthNet Registration</h1>
+            <h3>To register, complete the form below</h3>
+
+            {% if error_message %}
+                <div id="alert" >
+                    <strong>{{ error_message }}</strong>
+                </div>
+            {% endif %}
+
+            <form name = 'register' action="{% url 'HealthNet:createPLogIn' %}" method="post" onsubmit="return checkform();">
+                {% csrf_token %}
+                <ul>
+                    <li><a href="javascript:void(0)" class="tablinks" onclick="openInfo(event, 'pInfo')" id="defaultOpen">Personal Information</a></li>
+                    <li><a href="javascript:void(0)" class="tablinks" onclick="openInfo(event, 'eCont')">Emergency Contact</a></li>
+                    <li><a href="javascript:void(0)" class="tablinks" onclick="openInfo(event, 'mInfo')">Medical Information</a></li>
+                    <li><a href="javascript:void(0)" class="tablinks" onclick="openInfo(event, 'aInfo')">Account Information</a></li>
+                </ul>
+
+                <div id="pInfo" class="tabcontent">
+                    Enter your first name:
+                    <input type="text" name="firstName" style="display: block" placeholder="Ex.) First Name"/>
+                    Enter your last name:
+                    <input type="text" name="lastName" style="display: block" placeholder="Ex.) Last Name"/>
+                    Enter your address:
+                    <input type="text" name="address" style="display: block" placeholder="Ex.) 123 Name Street"/>
+                    Enter your phone number:
+                    <input type="text" name="number" style="display: block" placeholder="Ex.) (123)456-7890"/>
+                    Enter your email address:
+                    <input type="text" name="email" style="display: block" placeholder="Ex.) example@email.com"/>
+                    Enter your insurance provider:
+                    <input type="text" name="provider" style="display: block" placeholder="Ex.) Excellus Blue Cross Blue Shield"/>
+                    Enter your insurance ID number:
+                    <input type="text" name="insuranceid" style="display: block" placeholder="Ex.) ABC012345678"/>
+                </div>
+
+                <div id="eCont" class="tabcontent">
+                    Enter the first name of your contact:
+                    <input type="text" name="contactfname" placeholder="Ex.) Jane"/>
+                    Enter the last name of your contact:
+                    <input type="text" name="contactlname" placeholder="Ex.) Doe"/>
+                    Enter the address of your contact:
+                    <input type="text" name="contactaddress" placeholder="Ex.) 123 Name Street"/>
+                    Enter the phone number of your contact:
+                    <input type="text" name="contactnumber" placeholder="Ex.) (123)456-7890"/>
+                </div>
+
+                <div id="mInfo" class="tabcontent">
+                    Enter your height (0'00" or 0'0"):
+                    <input type="text" name="height" style="display: block" placeholder="Ex.) 0'00"/>
+                    Enter your weight (000.00 or 00.00):
+                    <input style="display: block" type="text" name="weight" style="display: block" placeholder="Ex.) 000.00 or 00.00"/>
+                    Enter any allergies you have:
+                    <input type="text" name="allergies" style="display: block" placeholder="Enter allergies here"/>
+                    Select your gender:
+                    <select style="display: block" name='gender'>
+                        <option name="placeholder" value="Please Select a Gender" selected disabled hidden>Please Select a Gender</option>
+                        <option name="gender1" value="Male">Male</option>
+                        <option name="gender2" value="Female">Female</option>
+                        <option name="gender3" value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div id="aInfo" class="tabcontent">
+                    Enter a username:
+                    <input type="text" name="username" style="display: block" placeholder="Username"/>
+                    Create a password:
+                    <input type="password" name="password" style="display: block" placeholder="Ex.) abcABC123!@#"/>
+                    Confirm the password:
+                    <input type="password" name="match" style="display: block" placeholder="Confirm Password"/>
+                </div>
+
+                <input type="submit" value="Submit" />
+            </form>
+
+            <form action="{% url 'HealthNet:index' %}">
+                <input class="button" type="submit" value="Cancel" />
+            </form>
+
+            <script>
+                document.getElementById("defaultOpen").click()
+            </script>
+        </div>
+    </div>
+</body>
+</html>

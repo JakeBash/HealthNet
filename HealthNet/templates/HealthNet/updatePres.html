@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'HAccelerator/formPages.css' %}" />
+<link rel='shortcut icon' href={% static 'HAccelerator/images/favicon.ico' %} type='images/favicon' />
+
+<head>
+	<title>HealthNet | Update Prescription</title>
+	<script type="text/javascript">
+        function checkform()
+        {
+            if(document.updatePres.name.value.length==0)
+            {
+                alert("Please enter a Prescription name");
+                return false;
+            }
+            else if(document.updatePres.dosage.value.length==0)
+            {
+                alert("Please enter a Dosage");
+                return false;
+            }
+            else
+            {
+                alert("Your prescription will now be updated");
+                return true;
+            }
+        }
+	</script>
+</head>
+
+<body>
+    <div id="container">
+        <div id="formContainer">
+            <h1>Update Your Prescription Below</h1>
+            <form name = 'updatePres' action="{% url 'HealthNet:updatePresInfo' prescription.id %}" method="post" onsubmit="return checkform();">
+
+                {% csrf_token %}
+
+                <ul>
+                    <li class="form">To update your prescription, modify the form below</li>
+                </ul>
+
+                <div class="formcontent">
+                    Input a Prescription Name:
+                    <input type="text" name="name"  value="{{ prescription.name }}" placeholder="Ex.) Amoxicillin"/>
+                    Input a dosage:
+                    <input type="text" name="dosage" value="{{ prescription.dosage }}" placeholder="Ex.) 1 Every Six Hours"/>
+                    Select a Patient:
+                    <select style="display: block" name='patient'>
+                        <option name="patient" value="{{prescription.patient.id}}" selected>{{prescription.patient.lastName}}, {{ prescription.patient.firstName }}</option>
+                        {% for p in patients %}
+                            {% if p.id != prescription.patient.id %}
+                                <option name="patient" value="{{p.id}}">{{p.lastName}}, {{ p.firstName }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <input type="submit" value="Submit" />
+            </form>
+
+            <form action="{% url 'HealthNet:prescriptions' %}">
+                <input class="button" type="submit" value="Cancel" />
+            </form>
+        </div>
+    </div>
+</body>
+</html>

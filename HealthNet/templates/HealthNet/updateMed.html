@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'HAccelerator/formPages.css' %}" />
+<link rel='shortcut icon' href={% static 'HAccelerator/images/favicon.ico' %} type='images/favicon' />
+
+<head>
+	<title>HealthNet | Update Medical Info</title>
+	<script type="text/javascript">
+		function checkform()
+		{
+            if (!validateHeight(document.update.height.value))
+            {
+                alert(document.update.height.value + " is incorrectly formatted, use  0\'00\" instead");
+				return false;
+            }
+            else if (!validateWeight(document.update.weight.value))
+            {
+                alert(document.update.weight.value + " is incorrectly formatted, use  000.00 instead");
+				return false;
+            }
+            else if (document.update.allergies.value.length==0)
+            {
+                alert("Please enter None if there are no allergies");
+                return false;
+            }
+            else if (!validateAllergies(document.update.allergies.value))
+            {
+                alert(document.update.allergies.value + " is incorrectly formatted, use Allergy #1, Allergy #2, Allergy #3 instead");
+                return false;
+            }
+            else if (document.update.gender.value == "Please Select a Gender")
+            {
+                alert("Please select a valid gender");
+                return false;
+            }
+            else
+            {
+                alert("Medical Information will now be updated");
+                return true;
+            }
+		}
+
+        function validateHeight(height)
+        {
+            var re = /^\d'(\d{1,2}")?$/;
+            return re.test(height);
+        }
+
+        function validateWeight(weight)
+        {
+            var re = /^([1-9]\d|[1-9]\d\d)(\.\d\d)$/;
+            return re.test(weight);
+        }
+
+        function validateAllergies(allergies)
+        {
+            var re = /^([a-zA-Z]+)|([a-zA-Z]+,[ ]*[a-zA-Z]*)|([a-zA-Z]*[ ][a-zA-Z]*)$/;
+            return re.test(allergies);
+        }
+	</script>
+</head>
+
+<body>
+    <div id="container">
+        <div id="formContainer">
+            <h1>Update Patient Medical Information</h1>
+            <form name = 'update' action="{% url 'HealthNet:updateMedInfo' patient.id %}" method="post" onsubmit="return checkform();">
+                {% csrf_token %}
+
+                <ul>
+                    <li class="form">To update medical information, complete the form below</li>
+                </ul>
+
+                <div class="formcontent">
+                    Enter patient's height (0'00" or 0'0"):
+                    <input type="text" value="{{ patient.height }}" name="height" placeholder="Ex.) 0'00"/>
+                    Enter patient's weight (000.00 or 00.00):
+                    <input style="display: block" type="text"  value="{{ patient.weight }}" name="weight" placeholder="Ex.) 000.00 or 00.00"/>
+                    Enter any allergies the patient has:
+                    <input type="text" value="{{ patient.allergies }}" name="allergies" placeholder="Ex.) Tree Nut, Asthma, Cats, etc."/>
+                    Select patient's gender:
+                    <select style="display: block" name='gender'>
+                        {% if patient.gender == "" %}
+                            <option name="placeholder" value="Please Select a Gender" selected disabled hidden>Please Select a Gender</option>
+                            <option name="gender1" value="Male">Male</option>
+                            <option name="gender2" value="Female">Female</option>
+                            <option name="gender3" value="Other">Other</option>
+                        {% elif patient.gender == "Male" %}
+                            <option name="gender1" value="Male" selected>Male</option>
+                            <option name="gender2" value="Female">Female</option>
+                            <option name="gender3" value="Other">Other</option>
+                        {% elif patient.gender == "Female" %}
+                            <option name="gender1" value="Male">Male</option>
+                            <option name="gender2" value="Female" selected>Female</option>
+                            <option name="gender3" value="Other">Other</option>
+                        {% else %}
+                            <option name="gender1" value="Male">Male</option>
+                            <option name="gender2" value="Female">Female</option>
+                            <option name="gender3" value="Other" selected>Other</option>
+                        {% endif %}
+                    </select>
+                </div>
+                <input type="submit" value="Submit" />
+            </form>
+
+            <form action="{% url 'HealthNet:information' %}">
+                <input class="button" type="submit" value="Cancel" />
+            </form>
+        </div>
+    </div>
+</body>
+</html>

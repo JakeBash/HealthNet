@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+
+{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'HAccelerator/mainPages.css' %}" />
+<link rel='shortcut icon' href={% static 'HAccelerator/images/favicon.ico' %} type='images/favicon' />
+
+<head>
+	<title>HealthNet | Appointments</title>
+</head>
+
+<ul class="nav">
+	<li class="nav_container"><a class="nav_items" href="{% url 'HealthNet:home' %}">Home</a></li>
+	<li class="nav_container"><a class="nav_items" href="{% url 'HealthNet:information' %}">User Information</a></li>
+	<li class="nav_container"><a class="nav_item_active" href="{% url 'HealthNet:appointments' %}">Manage Appointments</a></li>
+    <li class="nav_container"><a class="nav_items" href="{% url 'HealthNet:prescriptions' %}">Prescriptions</a></li>
+	<li class="nav_container"><a class="nav_items" href="{% url 'HealthNet:calendar' %}">Calendar</a></li>
+	<li class="nav_container"><a class="nav_items" href="{% url 'HealthNet:messages' %}">Messages</a></li>
+	<li style="float:right" class="nav_container"><a class="nav_items" href="{% url 'HealthNet:logOut' %}">Log Out</a></li>
+</ul>
+
+<body>
+    <div id="container">
+        <div id="tablecontainer">
+
+            {% if error_message %}
+                <div id="alert" >
+                    <strong>{{ error_message }}</strong>
+                </div>
+            {% endif %}
+
+            {% if type == "Patient" %}
+                <h2><span style="text-decoration: underline;">{{ user.firstName }} {{ user.lastName }}</span>, These Are Your Appointments</h2>
+                {% if appointments %}
+                    <table>
+                        <tr>
+                            <th>Date And Time</th>
+                            <th>Doctor</th>
+                            <th>Location</th>
+                            <th></th>
+                        </tr>
+                        {% for appointment in appointments %}
+                            <tr>
+                                <td><a class="alink" href="{% url 'HealthNet:updateAppt' appointment.id %}">
+                                    {{ appointment.month }}.{{ appointment.day }}.{{ appointment.year }},
+                                    {{ appointment.appttime }} {{ appointment.phase }}
+                                </a></td>
+                                <td>{{ appointment.doctor }}</td>
+                                <td>{{ appointment.location }}</td>
+                                <td><form action="{% url 'HealthNet:cancelAppt' appointment.id %}"><input type="submit" value="Cancel" /></form></td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                {% else %}
+                    <p>You have no scheduled appointments.</p>
+                {% endif %}
+
+                <br>
+
+                <form action="{% url 'HealthNet:createAppt' %}">
+                    <input type="submit" value="Create Appointment" />
+                </form>
+            {% endif %}
+
+            {% if type == "Doctor" %}
+                <h2>Appointments at <span style="text-decoration: underline;">{{ employee.workplace.name }}</span></h2>
+                {% if appointments %}
+                    <table>
+                        <tr>
+                            <th>Date And Time</th>
+                            <th>Patient</th>
+                            <th>Doctor</th>
+                        </tr>
+                        {% for appointment in appointments %}
+                            <tr>
+                                <td><a class="alink" href="{% url 'HealthNet:updateAppt' appointment.id %}">
+                                    {{ appointment.month }}.{{ appointment.day }}.{{ appointment.year }},
+                                    {{ appointment.appttime }} {{ appointment.phase }}
+                                </a></td>
+                                <td>{{ appointment.patient }}</td>
+                                <td>{{ appointment.doctor }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                {% else %}
+                    <p>At the moment, there are no appointments at your workplace.</p>
+                {% endif %}
+                <hr />
+                <h2>Appointments scheduled with you, <span style="text-decoration: underline;">{{ employee.firstName }} {{ employee.lastName }}</span></h2>
+                {% if this_appointments %}
+                    <table>
+                        <tr>
+                            <th>Date And Time</th>
+                            <th>Patient</th>
+                            <th>Location</th>
+                            <th></th>
+                        </tr>
+                        {% for appointment in this_appointments %}
+                            <tr>
+                                <td><a class="alink" href="{% url 'HealthNet:updateAppt' appointment.id %}">
+                                    {{ appointment.month }}.{{ appointment.day }}.{{ appointment.year }},
+                                    {{ appointment.appttime }} {{ appointment.phase }}
+                                </a></td>
+                                <td>{{ appointment.patient }}</td>
+                                <td>{{ appointment.location }}</td>
+                                <td><form action="{% url 'HealthNet:cancelAppt' appointment.id %}"><input type="submit" value="Cancel" /></form></td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                {% else %}
+                    <p>You have no scheduled appointments.</p>
+                {% endif %}
+
+                <br>
+
+                <form action="{% url 'HealthNet:createAppt' %}">
+                    <input type="submit" value="Create Appointment" />
+                </form>
+            {% endif %}
+
+            {% if type == "Nurse" %}
+                <h2><span style="text-decoration: underline;">{{ employee.firstName }} {{ employee.lastName }}</span>,
+                    these are the appointments at <span style="text-decoration: underline;">{{ employee.workplace.name }}</span></h2>
+                {% if appointments %}
+                    <table>
+                        <tr>
+                            <th>Date And Time</th>
+                            <th>Patient</th>
+                            <th>Doctor</th>
+                        </tr>
+                        {% for appointment in appointments %}
+                            <tr>
+                                <td><a class="alink" href="{% url 'HealthNet:updateAppt' appointment.id %}">
+                                    {{ appointment.month }}.{{ appointment.day }}.{{ appointment.year }},
+                                    {{ appointment.appttime }} {{ appointment.phase }}
+                                </a></td>
+                                <td>{{ appointment.patient }}</td>
+                                <td>{{ appointment.doctor }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                {% else %}
+                    <p>At the moment, there are no appointments at your workplace.</p>
+                {% endif %}
+
+                <br>
+
+                <form action="{% url 'HealthNet:createAppt' %}">
+                    <input type="submit" value="Create Appointment" />
+                </form>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

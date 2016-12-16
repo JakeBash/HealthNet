@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'HAccelerator/formPages.css' %}" />
+<link rel='shortcut icon' href={% static 'HAccelerator/images/favicon.ico' %} type='images/favicon' />
+
+<head>
+	<title>HealthNet | Reply Message</title>
+	<script type="text/javascript">
+        function checkform()
+        {
+			if(document.replyMess.subject.value.length == 0)
+            {
+                alert("Please enter a subject for your message");
+                return false;
+            }
+            else if(document.replyMess.message.value.length == 0)
+            {
+                alert("Please enter the contents of your message");
+                return false;
+            }
+            else
+            {
+                alert("Your message will now be sent")
+                return true;
+            }
+        }
+	</script>
+</head>
+
+<body>
+    <div id="container">
+        <div id="formContainer">
+            <h1>Reply To a Message</h1>
+            <form name = 'replyMess' action="{% url 'HealthNet:createMessInfo'  message.id %}" method="post" onsubmit="return checkform();">
+                {% csrf_token %}
+
+                <ul>
+                    <li class="form">This reply message is going to: <span style="text-decoration: underline;">{{ message.senderName }}</span></li>
+                </ul>
+
+                <div class="formcontent">
+                    Write a subject line:
+                    <input type="text" value="{{ message.subjectLine }}" name="subject"/>
+                    Write your message:
+                    <textarea style="display: block" rows="10" cols="101" name="message"></textarea>
+                </div>
+                <input type="submit" value="Submit" />
+            </form>
+
+            <form action="{% url 'HealthNet:messages' %}">
+                <input class="button" type="submit" value="Cancel" />
+            </form>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'HAccelerator/formPages.css' %}" />
+<link rel='shortcut icon' href={% static 'HAccelerator/images/favicon.ico' %} type='images/favicon' />
+
+<head>
+	<title>HealthNet | Login</title>
+	<script type="text/javascript">
+		function checkform()
+		{
+			if (document.login.username.value.length==0)
+			{
+				alert("Please fill in your username");
+				return false;
+			}
+			else if(document.login.password.value.length==0)
+            {
+                alert("Please enter your password");
+                return false;
+            }
+			else
+			{
+				return true;
+			}
+		}
+	</script>
+</head>
+
+<body>
+    <div id="container">
+        <div id="formContainer">
+            <h1>Welcome to HealthNet!</h1>
+            <h3>Enter your information below</h3>
+
+            {% if error_message %}
+                <div id="alert" >
+                    <strong>{{ error_message }}</strong>
+                </div>
+            {% endif %}
+
+            <form name = 'login' action="{% url 'HealthNet:verify' %}" method="post" onsubmit="return checkform();">
+                {% csrf_token %}
+                <input type="text" name="username" placeholder="Username"/>
+                <input type="password" name="password" placeholder="Password"/>
+                <input class="button" type="submit" value="Log In" />
+            </form>
+
+            <form action="{% url 'HealthNet:registerP' %}">
+                <input class="button" type="submit" value="Register" />
+            </form>
+
+            <form action="{% url 'HealthNet:password' %}">
+                <input class="button" type="submit" value="Forgot Your Password?" />
+            </form>
+        </div>
+    </div>
+</body>
+</html>

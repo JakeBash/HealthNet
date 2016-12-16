@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'HAccelerator/formPages.css' %}" />
+<link rel='shortcut icon' href={% static 'HAccelerator/images/favicon.ico' %} type='images/favicon' />
+
+<head>
+    <title>HealthNet | Statistics</title>
+</head>
+
+<body>
+    <div id="container">
+        <h1>System Statistics</h1>
+
+        <form action="{% url 'HealthNet:home' %}">
+            Number of Administrators in System: {{ admins }}
+            <br>
+            Number of Doctors in System: {{ doctors }}
+            <br>
+            Number of Nurses in System: {{ nurses }}
+            <br>
+            Number of Patients in System: {{ patients }}
+            <br>
+            Number of Prescriptions in System: {{ prescriptions }}
+            <br>
+            Number of Appointments in System: {{ appointments }}
+            <input class="button" type="submit" value="Return" />
+        </form>
+    </div>
+</body>
+</html>

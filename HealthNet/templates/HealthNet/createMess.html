@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'HAccelerator/formPages.css' %}" />
+<link rel='shortcut icon' href={% static 'HAccelerator/images/favicon.ico' %} type='images/favicon' />
+
+<head>
+	<title>HealthNet | Create Message</title>
+	<script type="text/javascript">
+        function checkform()
+        {
+			if(document.createMess.subject.value.length == 0)
+            {
+                alert("Please enter a subject for your message");
+                return false;
+            }
+            else if(document.createMess.message.value.length == 0)
+            {
+                alert("Please enter the contents of your message");
+                return false;
+            }
+            else if(document.createMess.users.value == "Please Select a User")
+            {
+                alert("Please select a recipient of your message")
+                return false;
+            }
+            else
+            {
+                alert("Your message will now be sent")
+                return true;
+            }
+        }
+	</script>
+</head>
+
+<body>
+    <div id="container">
+        <div id="formContainer">
+            <h1>Send a Message</h1>
+            <form name = 'createMess' action="{% url 'HealthNet:createMessInfo' -1%}" method="post" onsubmit="return checkform();">
+                {% csrf_token %}
+
+                <ul>
+                    <li class="form">To create your message, complete the form below</li>
+                </ul>
+
+                <div class="formcontent">
+                    Select a user to send your message to:
+                    <select style="display: block" name='users'>
+                        <option name="placeholder" value="Please Select a User" selected disabled hidden>Please Select a User</option>
+                        {% for l in logins %}
+                            <option name="users" value="{{ l.id }}">{{ l.username }}</option>
+                        {% endfor %}
+                    </select>
+                    Write a subject line:
+                    <input type="text" name="subject"/>
+                    Write your message:
+                    <textarea style="display: block" rows="10" cols="101" name="message"></textarea>
+                </div>
+                <input type="submit" value="Submit" />
+            </form>
+
+            <form action="{% url 'HealthNet:messages' %}">
+                <input class="button" type="submit" value="Cancel" />
+            </form>
+        </div>
+    </div>
+</body>
+</html>

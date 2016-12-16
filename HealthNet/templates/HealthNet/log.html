@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'HAccelerator/formPages.css' %}" />
+<link rel='shortcut icon' href={% static 'HAccelerator/images/favicon.ico' %} type='images/favicon' />
+
+<head>
+    <title>HealthNet | Activity Log</title>
+</head>
+
+<body>
+    <div id="container">
+        <h1>Activity Log</h1>
+        {%for logItem in logString%}
+            {{ logItem }}
+            <br>
+        {% endfor %}
+
+        <form action="{% url 'HealthNet:home' %}">
+            <input class="button" type="submit" value="Return" />
+        </form>
+    </div>
+</body>
+</html>
