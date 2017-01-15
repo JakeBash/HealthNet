@@ -1,7 +1,7 @@
 # HealthNet
 
 ### Introduction:
-* This project was created over the course of a semester for SWEN 261(Introcution to Software Engineering) at RIT. David Matz, Michael Gilmour, Derek Freeman and myself worked in a team to create this finished produyct for our customer (Professor). WE were given detailed requirements and had to simultanesously build our product as well as maintain and update several documents (Design, Requirements, Project Plan, Test Tracker). We completed two releases and the code and documents for our 2nd release are held in this repository.
+* This project was created over the course of a semester for SWEN 261(Introcution to Software Engineering) at RIT. David Matz, Michael Gilmour, Derek Freeman and myself worked in a team to create this finished produyct for our customer (Professor). We were given detailed requirements and had to simultanesously build our product as well as maintain and update several documents (Design, Requirements, Project Plan, Test Tracker). We completed two releases and the code and documents for our 2nd release are held in this repository.
 
 ### Installation:  
 * This web app will work on any type of machine (Windows, macOS, Linux) so long as you already have the software stack detailed by our instructor (Python 3.4.3, SQLite 3.8.3.1, Django 1.9.1).
